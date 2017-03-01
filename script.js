@@ -156,69 +156,71 @@ $(function () {
 					vm_total = vm1 + vm2;
 					body += '가치생산물(v+m): (Iv + Im = ' + vm1 + ') + (IIv + IIm = ' + vm2 + ') = ' + vm_total + '<br/>';
 					
+					// 확대재생산 조건 만족
 					if (vm1 > sec2['c']) {
 						body += '<br/>확대재생산이 이루어지기 위한 조건 \'I(v+m) > IIc\'을 만족합니다. (' +
 							vm1 + ' > ' + sec2['c'] + ')<br/>';
-					} else {
+						
+						body += '<br/>';
+						body += comment("1. 부문 I의 노동자들이 부문 II의 자본가들로부터 " + sec1['v'] + "의 소비수단을 구매합니다." +
+							calc_info("[ Iv -= " + sec1['v'] + ", II -= " + sec1['v'] + ", 부문 II 자본가 수중의 화폐 += " + sec1['v'] + " ]"));
+						var _1 = sec1['v'];
+						sec1['v'] -= 0;
+						// total2 -= _1; // XXX
+					
+						body += comment("2. 부문 II의 자본가들이 1.에서 얻은 화폐로 부문 I로부터 " + sec1['v'] + "v에 해당하는 생산수단을 구매합니다." +
+							calc_info("[ I -= " + _1 + ", 부문 II 자본가 수중의 화폐 '" + sec1['v'] + "' 사용 ]"));
+						// total1 -= _1; // XXX
+					
+						var _3 = sec2['c'] - _1;
+						var _3_frac = reduceFraction(sec1['c'], sec1['v']);
+						if (_3_frac == null) {
+							_3_frac = [1, 0];
+						}
+						var _3_ratio = sec1['v'] / (sec1['c'] + sec1['v']);
+						var _3_accum_v = (sec1['m'] - _3) * _3_ratio;
+						var _3_accum_c = (sec1['m'] - _3) - _3_accum_v;
+						body += comment("3. 부문 II의 자본가 수중에 부문 I에 판매할 수 있는 소비수단은 " + _3 + " (" + sec2['c'] + "IIc - " + _1 + "Iv)" +
+							"밖에 남아 있지 않습니다. 때문에 부문 I의 자본가들은 잉여가치 " + sec1['m'] + " 중에서 " + _3 + "만을 개인적 소비에 충당합니다. " +
+							"나머지 " + (sec1.m - _3) + "은 (지금 당장은 생산에 어떤 기술적 변화도 없다고 가정하고 있기 때문에)" +
+							"본래의 불변자본 대 가변자본의 비율인 '" + _3_frac[0] + " : " + _3_frac[1] + "'의 비율로 축적합니다." +
+							calc_info("[ Im -= " + _3 + ", 나머지 Im(" + (sec1['m'] - _3) + ")은 축적 => Ic += " + _3_accum_c + ", Iv += " + _3_accum_v + " ]"));
+						// sec1['m'] = 0;
+						sec1['c'] += _3_accum_c;
+						sec1['v'] += _3_accum_v;
+					
+						var _4_ratio = sec2['v'] / sec2['c'];
+						var _4_add_v = _3_accum_v * _4_ratio;
+						var _4_accum = _3_accum_v + _4_add_v;
+						body += comment("4. 그런데 3.에서 부문 I의 축적분 가운데 가변자본으로 축적되는 " + _3_accum_v + "은 임금으로 지불되는 것이기 때문에 " +
+							"화폐로서 실현, 즉 판매해야 합니다. 그리고 그것을 구매하는 것은 부문 II의 자본가들입니다. " +
+							"부문 II가 획득할 수 있는 생산수단의 양은 이 " + _3_accum_v + "이기 때문에, " +
+							"잉여가치 " + sec2['m'] + " 가운데 " + (sec2['m'] - _4_accum) + "만을 개인적으로 소비하고 " + _4_accum + "은 축적을 위한 " +
+							"재원으로 돌립니다.<br/>" +
+							"참고로 " + _3_accum_v + "이 아니라 " + _4_accum + "인 이유는 추가 생산수단이 " + _3_accum_v + "일 때, " +
+							"(역시 생산조건에 변화가 없다고 가정하고 있기에) 같은 불변자본 대 가변자본의 구성비율로 " + _4_add_v +
+							"의 추가적인 가변자본이 필요하기 때문입니다. 쉽게 말해서 새 기계가 생기면 그 기계를 돌릴 노동자가 더 필요하다는 의미입니다." +
+							calc_info("[ IIm -= " + (sec2['m'] - _4_accum) + ", 나머지 IIm(" + _4_accum + ")은 축적 => IIc += " + _3_accum_v + ", IIv += " + _4_add_v + " ]"));
+						// sec2['m'] = 0;
+						sec2['c'] += _3_accum_v;
+						sec2['v'] += _4_add_v;
+					
+						// 잉여가치 생성
+						sec1['m'] = sec1['v'];
+						sec2['m'] = sec2['v'];
+					
+						body += "다음 기 (" + (i + 2) + " 기)의 생산:<br/>" +
+							'<span class="expression">' +
+								' - I : ' + sector_to_s(sec1) + '<br/>' +
+								' - II: ' + sector_to_s(sec2) +
+							'</span><br/>' +
+							'전기 대비 생산물가치 +' + (get_total(sec1) + get_total(sec2) - totals);
+					}
+					// 확대재생산 조건 불만족
+					else {
 						body += '<br/><span class="error"> [!] 확대재생산이 이루어지기 위한 조건 \'I(v+m) > IIc\'을 만족하지 않습니다. (' +
 							vm1 + ' <= ' + sec2['c'] + ')</span>';
-						return;
 					}
-					
-					body += '<br/>';
-					body += comment("1. 부문 I의 노동자들이 부문 II의 자본가들로부터 " + sec1['v'] + "의 소비수단을 구매합니다." +
-						calc_info("[ Iv -= " + sec1['v'] + ", II -= " + sec1['v'] + ", 부문 II 자본가 수중의 화폐 += " + sec1['v'] + " ]"));
-					var _1 = sec1['v'];
-					sec1['v'] -= 0;
-					// total2 -= _1; // XXX
-					
-					body += comment("2. 부문 II의 자본가들이 1.에서 얻은 화폐로 부문 I로부터 " + sec1['v'] + "v에 해당하는 생산수단을 구매합니다." +
-						calc_info("[ I -= " + _1 + ", 부문 II 자본가 수중의 화폐 '" + sec1['v'] + "' 사용 ]"));
-					// total1 -= _1; // XXX
-					
-					var _3 = sec2['c'] - _1;
-					var _3_frac = reduceFraction(sec1['c'], sec1['v']);
-					if (_3_frac == null) {
-						_3_frac = [1, 0];
-					}
-					var _3_ratio = sec1['v'] / (sec1['c'] + sec1['v']);
-					var _3_accum_v = (sec1['m'] - _3) * _3_ratio;
-					var _3_accum_c = (sec1['m'] - _3) - _3_accum_v;
-					body += comment("3. 부문 II의 자본가 수중에 부문 I에 판매할 수 있는 소비수단은 " + _3 + " (" + sec2['c'] + "IIc - " + _1 + "Iv)" +
-						"밖에 남아 있지 않습니다. 때문에 부문 I의 자본가들은 잉여가치 " + sec1['m'] + " 중에서 " + _3 + "만을 개인적 소비에 충당합니다. " +
-						"나머지 " + (sec1.m - _3) + "은 (지금 당장은 생산에 어떤 기술적 변화도 없다고 가정하고 있기 때문에)" +
-						"본래의 불변자본 대 가변자본의 비율인 '" + _3_frac[0] + " : " + _3_frac[1] + "'의 비율로 축적합니다." +
-						calc_info("[ Im -= " + _3 + ", 나머지 Im(" + (sec1['m'] - _3) + ")은 축적 => Ic += " + _3_accum_c + ", Iv += " + _3_accum_v + " ]"));
-					// sec1['m'] = 0;
-					sec1['c'] += _3_accum_c;
-					sec1['v'] += _3_accum_v;
-					
-					var _4_ratio = sec2['v'] / sec2['c'];
-					var _4_add_v = _3_accum_v * _4_ratio;
-					var _4_accum = _3_accum_v + _4_add_v;
-					body += comment("4. 그런데 3.에서 부문 I의 축적분 가운데 가변자본으로 축적되는 " + _3_accum_v + "은 임금으로 지불되는 것이기 때문에 " +
-						"화폐로서 실현, 즉 판매해야 합니다. 그리고 그것을 구매하는 것은 부문 II의 자본가들입니다. " +
-						"부문 II가 획득할 수 있는 생산수단의 양은 이 " + _3_accum_v + "이기 때문에, " +
-						"잉여가치 " + sec2['m'] + " 가운데 " + (sec2['m'] - _4_accum) + "만을 개인적으로 소비하고 " + _4_accum + "은 축적을 위한 " +
-						"재원으로 돌립니다.<br/>" +
-						"참고로 " + _3_accum_v + "이 아니라 " + _4_accum + "인 이유는 추가 생산수단이 " + _3_accum_v + "일 때, " +
-						"(역시 생산조건에 변화가 없다고 가정하고 있기에) 같은 불변자본 대 가변자본의 구성비율로 " + _4_add_v +
-						"의 추가적인 가변자본이 필요하기 때문입니다. 쉽게 말해서 새 기계가 생기면 그 기계를 돌릴 노동자가 더 필요하다는 의미입니다." +
-						calc_info("[ IIm -= " + (sec2['m'] - _4_accum) + ", 나머지 IIm(" + _4_accum + ")은 축적 => IIc += " + _3_accum_v + ", IIv += " + _4_add_v + " ]"));
-					// sec2['m'] = 0;
-					sec2['c'] += _3_accum_v;
-					sec2['v'] += _4_add_v;
-					
-					// 잉여가치 생성
-					sec1['m'] = sec1['v'];
-					sec2['m'] = sec2['v'];
-					
-					body += "다음 기 (" + (i + 2) + " 기)의 생산:<br/>" +
-						'<span class="expression">' +
-							' - I : ' + sector_to_s(sec1) + '<br/>' +
-							' - II: ' + sector_to_s(sec2) +
-						'</span><br/>' +
-						'전기 대비 생산물가치 +' + (get_total(sec1) + get_total(sec2) - totals);
 					
 					if (!skip || i == 0 || i == (repeats - 1)) {
 						$('.results').append(head + body + tail);

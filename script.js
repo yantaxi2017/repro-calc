@@ -162,6 +162,7 @@ $(function () {
 					} else {
 						body += '<br/><span class="error"> [!] 확대재생산이 이루어지기 위한 조건 \'I(v+m) > IIc\'을 만족하지 않습니다. (' +
 							vm1 + ' <= ' + sec2['c'] + ')</span>';
+						return;
 					}
 					
 					body += '<br/>';

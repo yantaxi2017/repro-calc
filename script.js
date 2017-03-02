@@ -163,9 +163,9 @@ $(function () {
 						
 						body += '<br/>';
 						body += comment("1. 부문 I의 노동자들이 부문 II의 자본가들로부터 " + sec1['v'] + "의 소비수단을 구매합니다." +
-							calc_info("[ Iv -= " + sec1['v'] + ", II -= " + sec1['v'] + ", 부문 II 자본가 수중의 화폐 += " + sec1['v'] + " ]"));
+							calc_info("[ II -= " + sec1['v'] + ", 부문 II 자본가 수중의 화폐 += " + sec1['v'] + " ]"));
 						var _1 = sec1['v'];
-						sec1['v'] -= 0;
+						// sec1['v'] = 0;
 						// total2 -= _1; // XXX
 					
 						body += comment("2. 부문 II의 자본가들이 1.에서 얻은 화폐로 부문 I로부터 " + sec1['v'] + "v에 해당하는 생산수단을 구매합니다." +

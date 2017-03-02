@@ -25,75 +25,77 @@
 	</head>
 
 	<body>
-		<div class="page">
-			<div class="page-inner container">
-				<div class="row">
-					<div id="title" class="offset-md-3 col-md-6">
-						<span>repro-calc:</span> <span>Reproduction Calculator</span>
+		<div class="page container">
+			<div class="row">
+				<div class="page-inner offset-md-3 col-md-6">
+					<div class="row">
+						<div id="title" class="offset-md-1 col-md-10">
+							<span>repro-calc:</span> <span>Reproduction Calculator</span>
+						</div>
 					</div>
-				</div>
 				
-				<div class="row">
-					<div class="alerts offset-md-3 col-md-6">
+					<div class="row">
+						<div class="alerts offset-md-2 col-md-8">
+						</div>
 					</div>
-				</div>
 			
-				<div class="row">
-					<div class="settings offset-md-3 col-md-6">
-						<form class="calc-box">
-							<div class="form-group">
-								<select id="select-mode" class="custom-select" required>
-									<option selected disabled>Mode</option>
-									<option value="simple">Simple</option>
-									<option value="expanded">Expanded</option>
-								</select>
-							</div>
+					<div class="row">
+						<div class="settings offset-md-2 col-md-8">
+							<form class="calc-box">
+								<div class="form-group">
+									<select id="select-mode" class="custom-select" required>
+										<option selected disabled>Mode</option>
+										<option value="simple">Simple</option>
+										<option value="expanded">Expanded</option>
+									</select>
+								</div>
 							
-							<div class="form-group">
-								<label for="sector1">I 부문:</label>
-								<input id="sector1" class="form-control" type="text" name="sector1" required
-									data-toggle="tooltip" data-placement="top" title="e.g. 4000c + 1000v (+ 1000m) (= 6000)" />
-							</div>
+								<div class="form-group">
+									<label for="sector1">I 부문:</label>
+									<input id="sector1" class="form-control" type="text" name="sector1" required
+										data-toggle="tooltip" data-placement="top" title="e.g. 4000c + 1000v (+ 1000m) (= 6000)" />
+								</div>
 						
-							<div class="form-group">
-								<label for="sector2">II 부문:</label>
-								<input id="sector2" class="form-control" type="text" name="sector2" required
-									data-toggle="tooltip" data-placement="top" title="e.g. 1500c + 750v (+ 750m) (= 3000)" />
-							</div>
+								<div class="form-group">
+									<label for="sector2">II 부문:</label>
+									<input id="sector2" class="form-control" type="text" name="sector2" required
+										data-toggle="tooltip" data-placement="top" title="e.g. 1500c + 750v (+ 750m) (= 3000)" />
+								</div>
 						
-							<div class="form-group">
-								<label for="repeats">Repeats:</label>
-								<input id="repeats" class="form-control" type="number" name="repeats" required
-									value="1" min="1" />
-							</div>
+								<div class="form-group">
+									<label for="repeats">Repeats:</label>
+									<input id="repeats" class="form-control" type="number" name="repeats" required
+										value="1" min="1" />
+								</div>
 							
-							<div class="form-check">
-								<label class="form-check-label">
-									<input type="checkbox" class="form-check-input" name="skip" />
-									Only show start and end
-								</label>
-							</div>
+								<div class="form-check">
+									<label class="form-check-label">
+										<input type="checkbox" class="form-check-input" name="skip" />
+										Only show start and end
+									</label>
+								</div>
 							
-							<div class="form-check">
-								<label class="form-check-label">
-									<input checked type="checkbox" class="form-check-input" name="show-comments" />
-									Show comments
-								</label>
-							</div>
+								<div class="form-check">
+									<label class="form-check-label">
+										<input checked type="checkbox" class="form-check-input" name="show-comments" />
+										Show comments
+									</label>
+								</div>
 							
-							<div class="buttons">
-								<button type="submit" class="btn btn-primary">Calculate</button>
-								<button id="clear-results" type="button" class="btn btn-secondary">Clear Results</button>
-							</div>
-						</form>
+								<div class="buttons">
+									<button type="submit" class="btn btn-primary">Calculate</button>
+									<button id="clear-results" type="button" class="btn btn-secondary">Clear Results</button>
+								</div>
+							</form>
+						</div>
 					</div>
-				</div>
 				
-				<div class="row">
-					<div class="offset-md-2 col-md-8">
-						<div class="results">
-							<div style="font-weight: bold; margin-bottom: 0.5em;">
-								Results:
+					<div class="row">
+						<div class="offset-md-1 col-md-10">
+							<div class="results">
+								<div style="font-weight: bold; margin-bottom: 0.5em;">
+									Results:
+								</div>
 							</div>
 						</div>
 					</div>
